@@ -2,9 +2,8 @@
 
 namespace App\Dto\Patient;
 
+use App\Enum\Gender;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Dto\Patient\Gender;
-
 
 class CreatePatientDto
 {

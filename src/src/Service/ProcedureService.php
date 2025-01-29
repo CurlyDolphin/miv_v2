@@ -13,9 +13,10 @@ class ProcedureService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly ProcedureRepository    $procedureRepository,
-        private readonly SerializerInterface    $serializer
-    ) {}
+        private readonly ProcedureRepository $procedureRepository,
+        private readonly SerializerInterface $serializer,
+    ) {
+    }
 
     public function getProcedures()
     {

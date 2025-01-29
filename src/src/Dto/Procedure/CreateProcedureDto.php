@@ -14,4 +14,3 @@ class CreateProcedureDto
     #[Assert\Type('string')]
     public string $description;
 }
-

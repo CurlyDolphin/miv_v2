@@ -25,8 +25,7 @@ class ProcedureController extends AbstractController
     public function createProcedure(
         #[MapRequestPayload] CreateProcedureDto $dto,
         ProcedureService $procedureService,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $procedure = $procedureService->createProcedure($dto);
 
         return new JsonResponse(
@@ -39,7 +38,7 @@ class ProcedureController extends AbstractController
     public function updateProcedure(
         int $id,
         #[MapRequestPayload] UpdateProcedureDto $dto,
-        ProcedureService $procedureService
+        ProcedureService $procedureService,
     ): JsonResponse {
         $procedure = $procedureService->updateProcedure($id, $dto);
 
