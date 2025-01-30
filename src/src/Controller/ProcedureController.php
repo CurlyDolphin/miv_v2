@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\Procedure\CreateProcedureDto;
-use App\Dto\Procedure\UpdateProcedureDto;
 use App\Service\ProcedureService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +36,7 @@ class ProcedureController extends AbstractController
     #[Route('/procedures/{id}', name: 'update_procedure', requirements: ['id' => '\d+'], methods: ['PUT'])]
     public function updateProcedure(
         int $id,
-        #[MapRequestPayload] UpdateProcedureDto $dto,
+        #[MapRequestPayload] CreateProcedureDto $dto,
         ProcedureService $procedureService,
     ): JsonResponse {
         $procedure = $procedureService->updateProcedure($id, $dto);

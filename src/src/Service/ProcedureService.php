@@ -37,9 +37,13 @@ class ProcedureService
         return $procedure;
     }
 
-    public function updateProcedure(int $id, UpdateProcedureDto $dto): Procedure
+    public function updateProcedure(int $id, CreateProcedureDto $dto): Procedure
     {
         $procedure = $this->entityManager->getRepository(Procedure::class)->find($id);
+
+        if (!$procedure) {
+            throw new \Exception('Procedure not found');
+        }
 
         $procedure->setName($dto->name);
         $procedure->setDescription($dto->description);
