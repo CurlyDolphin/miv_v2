@@ -14,6 +14,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class PatientController extends AbstractController
 {
+    #[Route('/patients', name: 'get_patients', methods: ['GET'])]
+    public function getAllPatients(
+        PatientService $patientService
+    )
+    {
+        return new JsonResponse($patientService->getPatients(), Response::HTTP_OK, [], true);
+    }
+
     #[Route('/patients', name: 'create_patient', methods: ['POST'])]
     public function createPatient(
         #[MapRequestPayload] CreatePatientDto $dto,

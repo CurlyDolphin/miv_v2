@@ -12,6 +12,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class WardController extends AbstractController
 {
+    #[Route('/wards', name: 'get_wards', methods: ['GET'])]
+    public function getWards(WardService $wardService): JsonResponse
+    {
+        return new JsonResponse($wardService->getWards(), Response::HTTP_OK, [], true);
+    }
+
     #[Route('/wards', name: 'create_wards', methods: ['POST'])]
     public function createWards(
         #[MapRequestPayload] CreateWardDto $dto,
