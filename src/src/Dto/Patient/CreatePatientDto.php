@@ -2,36 +2,33 @@
 
 namespace App\Dto\Patient;
 
-use App\Enum\Gender;
+use App\Enum\GenderEnum;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CreatePatientDto
 {
-    #[Assert\NotBlank]
-    #[Assert\Type('string')]
-    public string $firstName;
+    #[Assert\Length(
+        min: 1,
+        max: 80,
+        minMessage: "Имя должно иметь минимум 1 символ",
+        maxMessage: "Имя не должно быть длинее 80 символов."
+    )]
+    public string $name;
 
-    #[Assert\NotBlank]
-    #[Assert\Type('string')]
+    #[Assert\Length(
+        min: 1,
+        max: 80,
+        minMessage: "Фамилия должна иметь минимум 1 символ",
+        maxMessage: "Фамилия не должна быть длинее 80 символов."
+    )]
     public string $lastName;
 
     #[Assert\NotBlank]
-    #[Assert\Date]
-    public string $dateOfBirth;
+    public GenderEnum $gender;
 
-    #[Assert\NotBlank]
-    #[Assert\Type(Gender::class)]
-    public Gender $gender;
+    #[Assert\NotNull]
+    public bool $isIdentified;
 
-    #[Assert\NotBlank]
-    #[Assert\Type('string')]
-    public string $address;
-
-    #[Assert\NotBlank]
-    #[Assert\Type('string')]
-    public string $phoneNumber;
-
-    #[Assert\NotBlank]
-    #[Assert\Email]
-    public string $email;
+    #[Assert\Type(type: "integer")]
+    public ?int $cardNumber = null;
 }
