@@ -31,4 +31,19 @@ class WardController extends AbstractController
             Response::HTTP_CREATED
         );
     }
+
+    #[Route('/wards/{id}', name: 'update_ward', methods: ['PUT'])]
+    public function updateWard(
+        int $id,
+        #[MapRequestPayload] CreateWardDto $dto,
+        WardService $wardService,
+    )
+    {
+        $ward = $wardService->updateWard($id, $dto);
+
+        return new JsonResponse(
+            ['message' => 'Ward updated successfully', 'Ward Number' => $ward->getWardNumber()],
+            Response::HTTP_OK
+        );
+    }
 }

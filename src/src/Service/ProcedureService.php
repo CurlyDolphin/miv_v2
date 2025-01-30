@@ -7,6 +7,7 @@ use App\Dto\Procedure\UpdateProcedureDto;
 use App\Entity\Procedure;
 use App\Repository\ProcedureRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class ProcedureService
@@ -42,7 +43,7 @@ class ProcedureService
         $procedure = $this->entityManager->getRepository(Procedure::class)->find($id);
 
         if (!$procedure) {
-            throw new \Exception('Procedure not found');
+            throw new EntityNotFoundException('Procedure not found');
         }
 
         $procedure->setName($dto->name);

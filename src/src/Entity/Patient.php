@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -38,6 +40,14 @@ class Patient
 
     #[ORM\Column(type: "integer", unique: true)]
     private int $cardNumber;
+
+    #[ORM\OneToMany(targetEntity: Hospitalized::class, mappedBy: "patient", cascade: ["persist", "remove"])]
+    private Collection $hospitalized;
+
+    public function __construct()
+    {
+        $this->hospitalized = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -92,5 +102,10 @@ class Patient
     public function setCardNumber(int $cardNumber): void
     {
         $this->cardNumber = $cardNumber;
+    }
+
+    public function gethospitalized(): Collection
+    {
+        return $this->hospitalized;
     }
 }

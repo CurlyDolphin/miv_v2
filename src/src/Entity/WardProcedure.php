@@ -4,12 +4,20 @@ namespace App\Entity;
 
 use App\Repository\WardProcedureRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: WardProcedureRepository::class)]
 #[ORM\Table(name: 'wards_procedures')]
+#[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: false)]
 #[ORM\UniqueConstraint(name: 'unique_ward_procedure', columns: ['ward_id', 'procedure_id'])]
+#[ORM\UniqueConstraint(name: 'unique_sequence_in_ward', columns: ['ward_id', 'sequence'])]
 class WardProcedure
 {
+    use TimestampableEntity;
+    use SoftDeleteableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
