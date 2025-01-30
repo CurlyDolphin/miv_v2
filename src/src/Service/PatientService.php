@@ -8,7 +8,7 @@ use App\Entity\Patient;
 use App\Enum\GenderEnum;
 use App\Repository\PatientRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\Serializer;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -53,6 +53,18 @@ class PatientService
         $this->entityManager->flush();
 
         return $patient;
+    }
+
+    public function deletePatient($id)
+    {
+        $patient = $this->patientRepository->find($id);
+
+        if (!$patient) {
+            throw new EntityNotFoundException('Patient not found');
+        }
+
+        $this->entityManager->remove($patient);
+        $this->entityManager->flush();
     }
 
     private function generateUniqueCardNumber(): int

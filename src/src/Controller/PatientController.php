@@ -35,4 +35,15 @@ class PatientController extends AbstractController
             Response::HTTP_CREATED
         );
     }
+
+    #[Route('/patients/{id}', name: 'delete_patient', methods: ['DELETE'])]
+    public function deletePatient(
+        int $id,
+        PatientService $patientService
+    ): JsonResponse
+    {
+        $patientService->deletePatient($id);
+
+        return new JsonResponse(['message' => 'Patient deleted successfully'], Response::HTTP_OK);
+    }
 }
