@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Dto\Patient\AssignPatientDto;
 use App\Dto\Patient\CreatePatientDto;
 use App\Service\PatientService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,5 +46,16 @@ class PatientController extends AbstractController
         $patientService->deletePatient($id);
 
         return new JsonResponse(['message' => 'Patient deleted successfully'], Response::HTTP_OK);
+    }
+
+    #[Route('/patients/assign', name: 'assign_patient_to_ward', methods: ['POST'])]
+    public function assignPatientToWard(
+        #[MapRequestPayload] AssignPatientDto $dto,
+        PatientService                        $patientService
+    ): JsonResponse
+    {
+        $patientService->assignPatientToWard($dto);
+
+        return new JsonResponse(['message' => 'Patient assigned to ward successfully'], Response::HTTP_OK);
     }
 }
