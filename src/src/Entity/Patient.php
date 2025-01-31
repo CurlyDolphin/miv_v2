@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Enum\GenderEnum;
 use App\Repository\PatientRepository;
@@ -39,9 +40,12 @@ class Patient
     private bool $isIdentified;
 
     #[ORM\Column(type: "integer", unique: true)]
-    private int $cardNumber;
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
+    #[ORM\SequenceGenerator(sequenceName: "card_number_seq", allocationSize: 1)]
+    private ?int $cardNumber = null;
 
-    #[ORM\OneToMany(targetEntity: Hospitalized::class, mappedBy: "patient", cascade: ["persist", "remove"])]
+    #[ORM\OneToMany(targetEntity: Hospitalized::class, mappedBy: 'patient', cascade: ['persist', 'remove'])]
+    #[Groups(['patient:read'])]
     private Collection $hospitalized;
 
     public function __construct()

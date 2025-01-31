@@ -19,9 +19,9 @@ class WardService
 
     public function getWards()
     {
-        $procedures = $this->wardRepository->findAll();
+        $wards = $this->wardRepository->findAll();
 
-        return $this->serializer->serialize($procedures, 'json');
+        return $this->serializer->serialize($wards, 'json', ['groups' => ['ward:read']]);
     }
 
     public function createWard(CreateWardDto $dto): Ward

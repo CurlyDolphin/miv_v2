@@ -45,7 +45,12 @@ class PatientService
             $dto->lastName = 'Doe';
         }
 
-        $cardNumber = $dto->cardNumber ?? $this->generateUniqueCardNumber();
+        if (!isset($dto->cardNumber)) {
+            $cardNumber = $this->generateNextCardNumber();
+        } else {
+            $cardNumber = $dto->cardNumber;
+            $this->updateCardNumberSequence($cardNumber);
+        }
 
         $patient = new Patient();
         $patient->setName($dto->name);
@@ -60,28 +65,17 @@ class PatientService
         return $patient;
     }
 
-    public function deletePatient(int $id): void
+    private function generateNextCardNumber(): int
     {
-        $patient = $this->patientRepository->find($id);
-
-        if (!$patient) {
-            throw new EntityNotFoundException('Patient not found');
-        }
-
-        $this->entityManager->remove($patient);
-        $this->entityManager->flush();
+        return $this->entityManager->getConnection()->fetchOne("SELECT nextval('card_number_seq')");
     }
 
-    private function generateUniqueCardNumber(): int
+    private function updateCardNumberSequence(int $manualNumber): void
     {
-        for ($i = 0; $i < 10; $i++) { // 10 попыток
-            $cardNumber = random_int(100000, 999999);
-            if (!$this->patientRepository->findOneBy(['cardNumber' => $cardNumber])) {
-                return $cardNumber;
-            }
-        }
-
-        throw new \RuntimeException('Could not generate a unique card number');
+        $this->entityManager->getConnection()->executeStatement(
+            "SELECT setval('card_number_seq', GREATEST((SELECT MAX(card_number) FROM patient), :manualNumber) + 1, false)",
+            ['manualNumber' => $manualNumber]
+        );
     }
 
     public function assignPatientToWard(AssignPatientDto $dto): Hospitalized
@@ -109,5 +103,17 @@ class PatientService
         $this->entityManager->flush();
 
         return $hospitalized;
+    }
+
+    public function deletePatient(int $id): void
+    {
+        $patient = $this->patientRepository->find($id);
+
+        if (!$patient) {
+            throw new EntityNotFoundException('Patient not found');
+        }
+
+        $this->entityManager->remove($patient);
+        $this->entityManager->flush();
     }
 }

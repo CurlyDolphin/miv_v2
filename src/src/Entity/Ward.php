@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: WardRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: false)]
@@ -25,12 +27,14 @@ class Ward
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['ward:read'])]
     private int $ward_number;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['ward:read'])]
     private string $description;
 
-    #[ORM\OneToMany(targetEntity: WardProcedure::class, mappedBy: 'ward', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Hospitalized::class, mappedBy: 'ward', cascade: ['persist', 'remove'])]
     private Collection $hospitalized;
 
     #[ORM\OneToMany(targetEntity: WardProcedure::class, mappedBy: 'ward', cascade: ['persist', 'remove'])]
@@ -71,7 +75,7 @@ class Ward
         return $this;
     }
 
-    public function gethospitalized(): Collection
+    public function getHospitalized(): Collection
     {
         return $this->hospitalized;
     }

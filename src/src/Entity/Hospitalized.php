@@ -7,9 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
-#[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: false)]
 #[ORM\Entity(repositoryClass: HospitalizedRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: false)]
 class Hospitalized
 {
     use TimestampableEntity;
@@ -20,11 +21,11 @@ class Hospitalized
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Patient::class, inversedBy: 'hospitalizations')]
+    #[ORM\ManyToOne(targetEntity: Patient::class, inversedBy: 'hospitalized')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Patient $patient;
 
-    #[ORM\ManyToOne(targetEntity: Ward::class, inversedBy: 'hospitalizations')]
+    #[ORM\ManyToOne(targetEntity: Ward::class, inversedBy: 'hospitalized')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Ward $ward;
 
@@ -54,5 +55,4 @@ class Hospitalized
         $this->ward = $ward;
         return $this;
     }
-
 }
