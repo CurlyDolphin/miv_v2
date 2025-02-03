@@ -23,37 +23,41 @@ class Patient
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(type: "string", length: 80)]
     #[Assert\Length(min: 1, max: 80)]
+    #[Groups(['patient:read'])]
     private string $name;
 
     #[ORM\Column(type: "string", length: 80)]
     #[Assert\Length(min: 1, max: 80)]
+    #[Groups(['patient:read'])]
     private string $lastName;
 
     #[ORM\Column(type: "string", length: 6, enumType: GenderEnum::class)]
+    #[Groups(['patient:read'])]
     private GenderEnum $gender;
 
     #[ORM\Column(type: "boolean")]
-    private bool $isIdentified;
+    #[Groups(['patient:read'])]
+    private bool $isIdentified = false;
 
     #[ORM\Column(type: "integer", unique: true)]
     #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     #[ORM\SequenceGenerator(sequenceName: "card_number_seq", allocationSize: 1)]
+    #[Groups(['patient:read'])]
     private ?int $cardNumber = null;
 
-    #[ORM\OneToMany(targetEntity: Hospitalized::class, mappedBy: 'patient', cascade: ['persist', 'remove'])]
-    #[Groups(['patient:read'])]
-    private Collection $hospitalized;
+    #[ORM\OneToMany(targetEntity: Hospitalization::class, mappedBy: 'patient')]
+    private Collection $hospitalizations;
 
     public function __construct()
     {
-        $this->hospitalized = new ArrayCollection();
+        $this->hospitalizations = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -63,9 +67,11 @@ class Patient
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function getLastName(): string
@@ -73,9 +79,11 @@ class Patient
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): void
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
     }
 
     public function getGender(): GenderEnum
@@ -83,9 +91,11 @@ class Patient
         return $this->gender;
     }
 
-    public function setGender(GenderEnum $gender): void
+    public function setGender(GenderEnum $gender): self
     {
         $this->gender = $gender;
+
+        return $this;
     }
 
     public function isIdentified(): bool
@@ -93,9 +103,11 @@ class Patient
         return $this->isIdentified;
     }
 
-    public function setIdentified(bool $isIdentified): void
+    public function setIdentified(bool $isIdentified): self
     {
         $this->isIdentified = $isIdentified;
+
+        return $this;
     }
 
     public function getCardNumber(): int
@@ -103,13 +115,34 @@ class Patient
         return $this->cardNumber;
     }
 
-    public function setCardNumber(int $cardNumber): void
+    public function setCardNumber(int $cardNumber): self
     {
         $this->cardNumber = $cardNumber;
+
+        return $this;
     }
 
-    public function gethospitalized(): Collection
+    public function getHospitalizations(): Collection
     {
-        return $this->hospitalized;
+        return $this->hospitalizations;
+    }
+
+    public function addHospitalization(Hospitalization $hospitalization): self
+    {
+        if (!$this->hospitalizations->contains($hospitalization)) {
+            $this->hospitalizations[] = $hospitalization;
+            $hospitalization->setPatient($this);
+        }
+        return $this;
+    }
+
+    public function removeHospitalization(Hospitalization $hospitalization): self
+    {
+        if ($this->hospitalizations->removeElement($hospitalization)) {
+            if ($hospitalization->getPatient() === $this) {
+                $hospitalization->setPatient(null);
+            }
+        }
+        return $this;
     }
 }

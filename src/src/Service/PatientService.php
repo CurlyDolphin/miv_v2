@@ -4,11 +4,13 @@ namespace App\Service;
 
 use App\Dto\Patient\AssignPatientDto;
 use App\Dto\Patient\CreatePatientDto;
-use App\Entity\Hospitalized;
+use App\Dto\Patient\UpdatePatientDto;
+use App\Entity\Hospitalization;
 use App\Entity\Patient;
 use App\Entity\Ward;
 use App\Enum\GenderEnum;
 use App\Repository\PatientRepository;
+use App\Repository\WardRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -18,6 +20,7 @@ class PatientService
 {
     public function __construct(
         private readonly PatientRepository      $patientRepository,
+        private readonly WardRepository         $wardRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidatorInterface     $validator,
         private readonly SerializerInterface    $serializer
@@ -26,7 +29,7 @@ class PatientService
     public function getPatients(): string
     {
         $patients = $this->patientRepository->findAll();
-        return $this->serializer->serialize($patients, 'json');
+        return $this->serializer->serialize($patients, 'json', ["groups" => "patient:read"]);
     }
 
     public function createPatient(CreatePatientDto $dto): Patient
@@ -78,7 +81,7 @@ class PatientService
         );
     }
 
-    public function assignPatientToWard(AssignPatientDto $dto): Hospitalized
+    public function assignPatientToWard(AssignPatientDto $dto): Hospitalization
     {
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
@@ -90,19 +93,27 @@ class PatientService
             throw new EntityNotFoundException('Patient not found');
         }
 
-        $ward = $this->entityManager->getRepository(Ward::class)->find($dto->wardId);
+        $ward = $this->wardRepository->find($dto->wardId);
         if (!$ward) {
             throw new EntityNotFoundException('Ward not found');
         }
 
-        $hospitalized = new Hospitalized();
-        $hospitalized->setPatient($patient);
-        $hospitalized->setWard($ward);
+        $hospitalization = new Hospitalization();
+        $hospitalization->setPatient($patient);
+        $hospitalization->setWard($ward);
 
-        $this->entityManager->persist($hospitalized);
+        $patient->addHospitalization($hospitalization);
+        $ward->addHospitalization($hospitalization);
+
+        $this->entityManager->persist($hospitalization);
         $this->entityManager->flush();
 
-        return $hospitalized;
+        return $hospitalization;
+    }
+
+    public function updatePatient(int $id, UpdatePatientDto $dto)
+    {
+
     }
 
     public function deletePatient(int $id): void

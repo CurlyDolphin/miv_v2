@@ -9,7 +9,6 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: WardProcedureRepository::class)]
-#[ORM\Table(name: 'wards_procedures')]
 #[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: false)]
 #[ORM\UniqueConstraint(name: 'unique_ward_procedure', columns: ['ward_id', 'procedure_id'])]
 #[ORM\UniqueConstraint(name: 'unique_sequence_in_ward', columns: ['ward_id', 'sequence'])]
@@ -24,11 +23,11 @@ class WardProcedure
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Ward::class, inversedBy: 'wardProcedures')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(nullable: false)]
     private Ward $ward;
 
-    #[ORM\ManyToOne(targetEntity: Procedure::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Procedure::class, inversedBy: 'wardProcedures')]
+    #[ORM\JoinColumn(nullable: false)]
     private Procedure $procedure;
 
     #[ORM\Column(type: 'integer')]
@@ -48,6 +47,28 @@ class WardProcedure
     {
         $this->sequence = $sequence;
 
+        return $this;
+    }
+
+    public function getWard(): Ward
+    {
+        return $this->ward;
+    }
+
+    public function setWard(Ward $ward): self
+    {
+        $this->ward = $ward;
+        return $this;
+    }
+
+    public function getProcedure(): Procedure
+    {
+        return $this->procedure;
+    }
+
+    public function setProcedure(Procedure $procedure): self
+    {
+        $this->procedure = $procedure;
         return $this;
     }
 }

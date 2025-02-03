@@ -8,7 +8,7 @@ class CreateWardDto
 {
     #[Assert\NotBlank]
     #[Assert\Range(min: 1, max: 999)]
-    public int $ward_number;
+    public int $wardNumber;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 5)]

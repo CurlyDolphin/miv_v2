@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProcedureRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -22,6 +24,14 @@ class Procedure
 
     #[ORM\Column(type: Types::TEXT)]
     private string $description;
+
+    #[ORM\OneToMany(targetEntity: WardProcedure::class, mappedBy:'procedure')]
+    private Collection $wardProcedures;
+
+    public function __construct()
+    {
+        $this->wardProcedures = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -49,6 +59,30 @@ class Procedure
     {
         $this->description = $description;
 
+        return $this;
+    }
+
+    public function getWardProcedures(): Collection
+    {
+        return $this->wardProcedures;
+    }
+
+    public function addWardProcedure(WardProcedure $wardProcedure): self
+    {
+        if (!$this->wardProcedures->contains($wardProcedure)) {
+            $this->wardProcedures[] = $wardProcedure;
+            $wardProcedure->setProcedure($this);
+        }
+        return $this;
+    }
+
+    public function removeWardProcedure(WardProcedure $wardProcedure): self
+    {
+        if ($this->wardProcedures->removeElement($wardProcedure)) {
+            if ($wardProcedure->getProcedure() === $this) {
+                $wardProcedure->setProcedure(null);
+            }
+        }
         return $this;
     }
 }

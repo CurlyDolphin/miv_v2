@@ -15,4 +15,5 @@ class WardProcedureRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, WardProcedure::class);
     }
+
 }

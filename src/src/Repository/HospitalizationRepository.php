@@ -2,17 +2,17 @@
 
 namespace App\Repository;
 
-use App\Entity\Hospitalized;
+use App\Entity\Hospitalization;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Hospitalized>
+ * @extends ServiceEntityRepository<Hospitalization>
  */
-class HospitalizedRepository extends ServiceEntityRepository
+class HospitalizationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Hospitalized::class);
+        parent::__construct($registry, Hospitalization::class);
     }
 }

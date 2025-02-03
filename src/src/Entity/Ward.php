@@ -11,7 +11,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: WardRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: false)]
@@ -26,23 +25,23 @@ class Ward
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "integer", unique: true)]
     #[Groups(['ward:read'])]
-    private int $ward_number;
+    private int $wardNumber;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['ward:read'])]
     private string $description;
 
-    #[ORM\OneToMany(targetEntity: Hospitalized::class, mappedBy: 'ward', cascade: ['persist', 'remove'])]
-    private Collection $hospitalized;
+    #[ORM\OneToMany(targetEntity: Hospitalization::class, mappedBy: 'ward')]
+    private Collection $hospitalizations;
 
-    #[ORM\OneToMany(targetEntity: WardProcedure::class, mappedBy: 'ward', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: WardProcedure::class, mappedBy: 'ward')]
     private Collection $wardProcedures;
 
     public function __construct()
     {
-        $this->hospitalized = new ArrayCollection();
+        $this->hospitalizations = new ArrayCollection();
         $this->wardProcedures = new ArrayCollection();
     }
 
@@ -53,12 +52,12 @@ class Ward
 
     public function getWardNumber(): int
     {
-        return $this->ward_number;
+        return $this->wardNumber;
     }
 
-    public function setWardNumber(int $ward_number): static
+    public function setWardNumber(int $wardNumber): self
     {
-        $this->ward_number = $ward_number;
+        $this->wardNumber = $wardNumber;
 
         return $this;
     }
@@ -68,20 +67,58 @@ class Ward
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function getHospitalized(): Collection
+    public function getHospitalizations(): Collection
     {
-        return $this->hospitalized;
+        return $this->hospitalizations;
+    }
+
+    public function addHospitalization(Hospitalization $hospitalization): self
+    {
+        if (!$this->hospitalizations->contains($hospitalization)) {
+            $this->hospitalizations[] = $hospitalization;
+            $hospitalization->setWard($this);
+        }
+        return $this;
+    }
+
+    public function removeHospitalization(Hospitalization $hospitalization): self
+    {
+        if ($this->hospitalizations->removeElement($hospitalization)) {
+            if ($hospitalization->getWard() === $this) {
+                $hospitalization->setWard(null);
+            }
+        }
+        return $this;
     }
 
     public function getWardProcedures(): Collection
     {
         return $this->wardProcedures;
+    }
+
+    public function addWardProcedure(WardProcedure $wardProcedure): self
+    {
+        if (!$this->wardProcedures->contains($wardProcedure)) {
+            $this->wardProcedures[] = $wardProcedure;
+            $wardProcedure->setWard($this);
+        }
+        return $this;
+    }
+
+    public function removeWardProcedure(WardProcedure $wardProcedure): self
+    {
+        if ($this->wardProcedures->removeElement($wardProcedure)) {
+            if ($wardProcedure->getWard() === $this) {
+                $wardProcedure->setWard(null);
+            }
+        }
+        return $this;
     }
 }

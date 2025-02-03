@@ -21,13 +21,13 @@ class WardService
     {
         $wards = $this->wardRepository->findAll();
 
-        return $this->serializer->serialize($wards, 'json', ['groups' => ['ward:read']]);
+        return $this->serializer->serialize($wards, 'json', ['groups' => 'ward:read']);
     }
 
     public function createWard(CreateWardDto $dto): Ward
     {
         $ward = new Ward();
-        $ward->setWardNumber($dto->ward_number);
+        $ward->setWardNumber($dto->wardNumber);
         $ward->setDescription($dto->description);
 
         $this->entityManager->persist($ward);
@@ -44,12 +44,36 @@ class WardService
             throw new EntityNotFoundException('Ward not found');
         }
 
-        $ward->setWardNumber($dto->ward_number);
+        $ward->setWardNumber($dto->wardNumber);
         $ward->setDescription($dto->description);
 
         $this->entityManager->persist($ward);
         $this->entityManager->flush();
 
         return $ward;
+    }
+
+    public function getWardInfo(int $wardId): array
+    {
+        $ward = $this->wardRepository->findWardWithPatients($wardId);
+
+        if (!$ward) {
+            throw new EntityNotFoundException('Ward not found');
+        }
+
+        $patients = [];
+        foreach ($ward->getHospitalizations() as $hospitalization) {
+            $patient = $hospitalization->getPatient();
+            $patients[] = [
+                'id'       => $patient->getId(),
+                'name'     => $patient->getName(),
+                'lastName' => $patient->getLastName(),
+            ];
+        }
+
+        return [
+            'wardNumber' => $ward->getWardNumber(),
+            'patients'   => $patients,
+        ];
     }
 }

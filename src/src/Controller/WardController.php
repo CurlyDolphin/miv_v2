@@ -46,4 +46,15 @@ class WardController extends AbstractController
             Response::HTTP_OK
         );
     }
+
+    #[Route('/wards/{id}', name: 'get_ward_info', methods: ['GET'])]
+    public function getWardInfo(
+        int $id,
+        WardService $wardService
+    ): JsonResponse
+    {
+        $wardInfo = $wardService->getWardInfo($id);
+
+        return new JsonResponse($wardInfo, Response::HTTP_OK);
+    }
 }
