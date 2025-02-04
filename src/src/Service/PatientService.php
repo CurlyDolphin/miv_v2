@@ -111,9 +111,43 @@ class PatientService
         return $hospitalization;
     }
 
-    public function updatePatient(int $id, UpdatePatientDto $dto)
-    {
+    public function updatePatient(
+        int $id,
+        UpdatePatientDto $dto,
+    ): Patient {
+        $patient = $this->patientRepository->find($id);
+        if (!$patient) {
+            throw new EntityNotFoundException('Patient not found');
+        }
 
+        if ($dto->name !== null) {
+            $patient->setName($dto->name);
+        }
+        if ($dto->lastName !== null) {
+            $patient->setLastName($dto->lastName);
+        }
+
+        if ($dto->wardId !== null) {
+            $ward = $this->wardRepository->find($dto->wardId);
+            if (!$ward) {
+                throw new EntityNotFoundException('Ward not found');
+            }
+
+            $currentHospitalization = $patient->getHospitalizations()->last();
+
+            if ($currentHospitalization) {
+                $currentHospitalization->setWard($ward);
+            } else {
+                $hospitalization = new Hospitalization();
+                $hospitalization->setPatient($patient);
+                $hospitalization->setWard($ward);
+
+                $this->entityManager->persist($hospitalization);
+            }
+        }
+
+        $this->entityManager->flush();
+        return $patient;
     }
 
     public function deletePatient(int $id): void

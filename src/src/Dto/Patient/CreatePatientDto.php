@@ -23,11 +23,11 @@ class CreatePatientDto
     )]
     public string $lastName;
 
-    #[Assert\NotBlank]
+    #[Assert\Choice(['male', 'female', 'other'], message: "Пол должен быть задан")]
     public GenderEnum $gender;
 
     #[Assert\NotNull]
-    public bool $isIdentified;
+    public bool $isIdentified = false;
 
     #[Assert\Type(type: "integer")]
     public ?int $cardNumber = null;

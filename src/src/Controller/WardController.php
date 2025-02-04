@@ -57,4 +57,10 @@ class WardController extends AbstractController
 
         return new JsonResponse($wardInfo, Response::HTTP_OK);
     }
+
+    #[Route('api/wards/{ward_id}/procedures', name: 'create_healing_plan', methods: ['POST'])]
+    public function createHealingPlan()
+    {
+
+    }
 }

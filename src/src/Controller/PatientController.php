@@ -38,17 +38,6 @@ class PatientController extends AbstractController
         );
     }
 
-    #[Route('/patients/{id}', name: 'delete_patient', methods: ['DELETE'])]
-    public function deletePatient(
-        int $id,
-        PatientService $patientService
-    ): JsonResponse
-    {
-        $patientService->deletePatient($id);
-
-        return new JsonResponse(['message' => 'Patient deleted successfully'], Response::HTTP_OK);
-    }
-
     #[Route('/patients/assign', name: 'assign_patient_to_ward', methods: ['POST'])]
     public function assignPatientToWard(
         #[MapRequestPayload] AssignPatientDto $dto,
@@ -65,7 +54,7 @@ class PatientController extends AbstractController
         int $id,
         #[MapRequestPayload] UpdatePatientDto $dto,
         PatientService $patientService,
-    )
+    ): JsonResponse
     {
         $patient = $patientService->updatePatient($id, $dto);
 
@@ -73,5 +62,16 @@ class PatientController extends AbstractController
             ['message' => 'Patient updated successfully', 'Patient Name' => $patient->getName()],
             Response::HTTP_OK
         );
+    }
+
+    #[Route('/patients/{id}', name: 'delete_patient', methods: ['DELETE'])]
+    public function deletePatient(
+        int $id,
+        PatientService $patientService
+    ): JsonResponse
+    {
+        $patientService->deletePatient($id);
+
+        return new JsonResponse(['message' => 'Patient deleted successfully'], Response::HTTP_OK);
     }
 }
