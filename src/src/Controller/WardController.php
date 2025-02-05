@@ -57,4 +57,12 @@ class WardController extends AbstractController
 
         return new JsonResponse($wardInfo, Response::HTTP_OK);
     }
+
+    #[Route('/wards/{wardId}', name: 'delete_ward', methods: ['DELETE'])]
+    public function deleteWard(int $wardId, WardService $wardService): JsonResponse
+    {
+        $wardService->deleteWard($wardId);
+
+        return new JsonResponse(['message' => 'Палата успешно удалена. Пациенты отцеплены.'], Response::HTTP_OK);
+    }
 }

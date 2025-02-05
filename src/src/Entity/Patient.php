@@ -23,16 +23,17 @@ class Patient
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
+    #[Groups(['patient:read', 'procedure:read'])]
     private int $id;
 
     #[ORM\Column(type: "string", length: 80)]
     #[Assert\Length(min: 1, max: 80)]
-    #[Groups(['patient:read'])]
+    #[Groups(['patient:read', 'procedure:read'])]
     private string $name;
 
     #[ORM\Column(type: "string", length: 80)]
     #[Assert\Length(min: 1, max: 80)]
-    #[Groups(['patient:read'])]
+    #[Groups(['patient:read', 'procedure:read'])]
     private string $lastName;
 
     #[ORM\Column(type: "string", length: 6, enumType: GenderEnum::class)]
@@ -46,10 +47,11 @@ class Patient
     #[ORM\Column(type: "integer", unique: true)]
     #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     #[ORM\SequenceGenerator(sequenceName: "card_number_seq", allocationSize: 1)]
-    #[Groups(['patient:read'])]
+    #[Groups(['patient:read', 'procedure:read'])]
     private ?int $cardNumber = null;
 
     #[ORM\OneToMany(targetEntity: Hospitalization::class, mappedBy: 'patient')]
+    #[Groups(['patient:read'])]
     private Collection $hospitalizations;
 
     public function __construct()

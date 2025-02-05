@@ -3,7 +3,9 @@
 namespace App\Service;
 
 use App\Dto\Procedure\CreateProcedureDto;
+use App\Dto\Procedure\ProcedureInfoDto;
 use App\Dto\Procedure\UpdateProcedureDto;
+use App\DTO\ProcedureDTO;
 use App\Entity\Procedure;
 use App\Repository\ProcedureRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,9 +23,30 @@ class ProcedureService
 
     public function getProcedures()
     {
-        $procedures = $this->procedureRepository->findAll();
+        $procedure = $this->procedureRepository->findAll();
 
-        return $this->serializer->serialize($procedures, 'json');
+        if (!$procedure) {
+            throw new EntityNotFoundException('Процедура не найдена');
+        }
+
+        return $this->serializer->serialize(
+            $procedure,
+            'json',
+            ['groups' => 'procedures:read']
+        );
+    }
+
+    public function getProcedureInfo(int $procedureId): string
+    {
+        $procedureDTO = $this->procedureRepository->findProcedureInfo($procedureId);
+
+        if (!$procedureDTO) {
+            throw new EntityNotFoundException('Процедура не найдена');
+        }
+
+        $jsonData = $this->serializer->serialize($procedureDTO, 'json');
+
+        return $jsonData;
     }
 
     public function createProcedure(CreateProcedureDto $dto): Procedure

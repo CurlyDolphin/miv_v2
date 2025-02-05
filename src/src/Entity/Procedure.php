@@ -18,18 +18,19 @@ class Procedure
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['ward_procedure:read'])]
+    #[Groups(['ward_procedure:read', 'procedures:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 120, unique: true)]
-    #[Groups(['ward_procedure:read'])]
+    #[Groups(['ward_procedure:read', 'procedures:read'])]
     private string $name;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['ward_procedure:read'])]
+    #[Groups(['ward_procedure:read', 'procedures:read'])]
     private string $description;
 
     #[ORM\OneToMany(targetEntity: WardProcedure::class, mappedBy:'procedure')]
+    #[Groups(['procedure:read'])]
     private Collection $wardProcedures;
 
     public function __construct()

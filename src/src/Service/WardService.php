@@ -76,4 +76,11 @@ class WardService
             'patients'   => $patients,
         ];
     }
+
+    public function deleteWard(int $wardId): void
+    {
+        $this->wardRepository->deleteWardWithPatients($wardId);
+
+        $this->entityManager->flush();
+    }
 }

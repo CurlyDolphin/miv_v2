@@ -16,4 +16,16 @@ class PatientRepository extends ServiceEntityRepository
         parent::__construct($registry, Patient::class);
     }
 
+    public function findPatientInfo(int $patientId): ?Patient
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.hospitalizations', 'h')
+            ->addSelect('h')
+            ->leftJoin('h.ward', 'w')
+            ->addSelect('w')
+            ->where('p.id = :patientId')
+            ->setParameter('patientId', $patientId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

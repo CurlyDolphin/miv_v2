@@ -24,12 +24,12 @@ class Hospitalization
 
     #[ORM\ManyToOne(targetEntity: Patient::class, inversedBy: 'hospitalizations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['hospitalization:read'])]
+    #[Groups(['hospitalization:read', 'procedure:read'])]
     private Patient $patient;
 
     #[ORM\ManyToOne(targetEntity: Ward::class, inversedBy: 'hospitalizations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['hospitalization:read'])]
+    #[Groups(['hospitalization:read', 'patient:read'])]
     private Ward $ward;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -37,6 +37,7 @@ class Hospitalization
         "value === null or value >= this.getCreatedAt()",
         message: "Дата выписки не может быть раньше даты поступления"
     )]
+    #[Groups(['patient:read'])]
     private ?\DateTimeInterface $dischargeDate = null;
 
     public function getId(): ?int

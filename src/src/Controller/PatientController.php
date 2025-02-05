@@ -22,6 +22,17 @@ class PatientController extends AbstractController
         return new JsonResponse($patientService->getPatients(), Response::HTTP_OK, [], true);
     }
 
+    #[Route('/patients/{patientId}', name: 'get_patient', methods: ['GET'])]
+    public function getPatientInfo(
+        int            $patientId,
+        PatientService $patientService
+    ): JsonResponse
+    {
+        $jsonData = $patientService->getPatientInfo($patientId);
+
+        return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
+    }
+
     #[Route('/patients', name: 'create_patient', methods: ['POST'])]
     public function createPatient(
         #[MapRequestPayload] CreatePatientDto $dto,

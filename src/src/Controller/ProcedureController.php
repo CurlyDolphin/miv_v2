@@ -33,16 +33,15 @@ class ProcedureController extends AbstractController
         );
     }
 
-//    #[Route('/procedures/{id}', name: 'procedure_info', requirements: ['id' => '\d+'], methods: ['GET'])]
-//    public function procedureInfo(
-//        int $id,
-//        ProcedureService $procedureService
-//    )
-//    {
-//        $procedure = $procedureService->getProcedureInfo($id);
-//
-//        return new JsonResponse($procedure, Response::HTTP_OK, [], true);
-//    }
+    #[Route('/procedures/{procedureId}', name: 'get_procedure_info', methods: ['GET'])]
+    public function getProcedureInfo(
+        int $procedureId,
+        ProcedureService $procedureService
+    ): JsonResponse {
+        $jsonData = $procedureService->getProcedureInfo($procedureId);
+
+        return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
+    }
 
     #[Route('/procedures/{id}', name: 'update_procedure', requirements: ['id' => '\d+'], methods: ['PUT'])]
     public function updateProcedure(

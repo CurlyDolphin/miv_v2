@@ -26,6 +26,21 @@ class PatientService
         return $this->serializer->serialize($patients, 'json', ["groups" => "patient:read"]);
     }
 
+    public function getPatientInfo(int $patientId): string
+    {
+        $patient = $this->patientRepository->findPatientInfo($patientId);
+
+        if (!$patient) {
+            throw new EntityNotFoundException('Пациент не найден');
+        }
+
+        return $this->serializer->serialize(
+            $patient,
+            'json',
+            ['groups' => 'patient:read']
+        );
+    }
+
     public function createPatient(CreatePatientDto $dto): Patient
     {
         $errors = $this->validator->validate($dto);
