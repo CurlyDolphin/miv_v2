@@ -19,7 +19,7 @@ class PatientController extends AbstractController
     #[Route('/patients', name: 'get_patients', methods: ['GET'])]
     public function getAllPatients(
         PatientService $patientService
-    )
+    ): JsonResponse
     {
         return new JsonResponse($patientService->getPatients(), Response::HTTP_OK, [], true);
     }

@@ -33,6 +33,17 @@ class ProcedureController extends AbstractController
         );
     }
 
+//    #[Route('/procedures/{id}', name: 'procedure_info', requirements: ['id' => '\d+'], methods: ['GET'])]
+//    public function procedureInfo(
+//        int $id,
+//        ProcedureService $procedureService
+//    )
+//    {
+//        $procedure = $procedureService->getProcedureInfo($id);
+//
+//        return new JsonResponse($procedure, Response::HTTP_OK, [], true);
+//    }
+
     #[Route('/procedures/{id}', name: 'update_procedure', requirements: ['id' => '\d+'], methods: ['PUT'])]
     public function updateProcedure(
         int $id,
@@ -45,5 +56,16 @@ class ProcedureController extends AbstractController
             ['message' => 'Procedure updated successfully', 'procedureName' => $procedure->getName()],
             Response::HTTP_OK
         );
+    }
+
+    #[Route('/procedures/{id}', name: 'delete_procedure', requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    public function deleteProcedure(
+        int $id,
+        ProcedureService $procedureService
+    ): JsonResponse
+    {
+        $procedureService->deleteProcedure($id);
+
+        return new JsonResponse(['message' => 'Procedure deleted successfully'], Response::HTTP_OK);
     }
 }

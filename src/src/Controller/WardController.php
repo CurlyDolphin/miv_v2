@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Dto\Ward\CreateWardDto;
+use App\Dto\Ward\UpdateWardProcedureDto;
 use App\Service\WardService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +38,7 @@ class WardController extends AbstractController
         int $id,
         #[MapRequestPayload] CreateWardDto $dto,
         WardService $wardService,
-    )
+    ): JsonResponse
     {
         $ward = $wardService->updateWard($id, $dto);
 
@@ -58,9 +59,18 @@ class WardController extends AbstractController
         return new JsonResponse($wardInfo, Response::HTTP_OK);
     }
 
-    #[Route('api/wards/{ward_id}/procedures', name: 'create_healing_plan', methods: ['POST'])]
-    public function createHealingPlan()
+    #[Route('/wards/{wardId}/procedures', name: 'create_healing_plan', methods: ['POST'])]
+    public function updateWardProcedure(
+        int $wardId,
+        #[MapRequestPayload] UpdateWardProcedureDto $dto,
+        WardService $wardService
+    ): JsonResponse
     {
+        $wardProcedures = $wardService->updateWardProcedures($wardId, $dto);
 
+        return new JsonResponse(
+            ['message' => 'Ward procedures updated successfully', 'Procedures' => $wardProcedures],
+            Response::HTTP_OK
+        );
     }
 }

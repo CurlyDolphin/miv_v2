@@ -54,4 +54,17 @@ class ProcedureService
 
         return $procedure;
     }
+
+    public function deleteProcedure(int $id): void
+    {
+        $procedure = $this->entityManager->getRepository(Procedure::class)->find($id);
+
+        if (!$procedure) {
+            throw new EntityNotFoundException('Procedure not found');
+        }
+
+        $this->entityManager->remove($procedure);
+        $this->entityManager->flush();
+
+    }
 }
