@@ -1,6 +1,6 @@
 <?php
 // src/Dto/Ward/UpdateWardProcedureDto.php
-namespace App\Dto\Ward;
+namespace App\Dto\WardProcedure;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
