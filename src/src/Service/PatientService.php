@@ -23,6 +23,7 @@ class PatientService
     public function getPatients(): string
     {
         $patients = $this->patientRepository->findAll();
+
         return $this->serializer->serialize($patients, 'json', ["groups" => "patient:read"]);
     }
 

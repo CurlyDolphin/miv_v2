@@ -28,9 +28,9 @@ class PatientController extends AbstractController
         PatientService $patientService
     ): JsonResponse
     {
-        $jsonData = $patientService->getPatientInfo($patientId);
+        $patientInfo = $patientService->getPatientInfo($patientId);
 
-        return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
+        return new JsonResponse($patientInfo, Response::HTTP_OK, [], true);
     }
 
     #[Route('/patients', name: 'create_patient', methods: ['POST'])]

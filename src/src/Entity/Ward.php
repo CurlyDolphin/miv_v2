@@ -26,7 +26,7 @@ class Ward
     private ?int $id = null;
 
     #[ORM\Column(type: "integer", unique: true)]
-    #[Groups(['ward:read', 'patient:read', 'procedure:read'])]
+    #[Groups(['ward:read', 'patient:read'])]
     private int $wardNumber;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -37,7 +37,6 @@ class Ward
     private Collection $hospitalizations;
 
     #[ORM\OneToMany(targetEntity: WardProcedure::class, mappedBy: 'ward')]
-    #[Groups(['procedure:read'])]
     private Collection $wardProcedures;
 
     public function __construct()

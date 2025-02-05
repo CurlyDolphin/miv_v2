@@ -38,9 +38,9 @@ class ProcedureController extends AbstractController
         int $procedureId,
         ProcedureService $procedureService
     ): JsonResponse {
-        $jsonData = $procedureService->getProcedureInfo($procedureId);
+        $procedureInfo = $procedureService->getProcedureInfo($procedureId);
 
-        return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
+        return new JsonResponse($procedureInfo, Response::HTTP_OK, [], true);
     }
 
     #[Route('/procedures/{id}', name: 'update_procedure', requirements: ['id' => '\d+'], methods: ['PUT'])]

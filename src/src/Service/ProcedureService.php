@@ -32,7 +32,7 @@ class ProcedureService
         return $this->serializer->serialize(
             $procedure,
             'json',
-            ['groups' => 'procedures:read']
+            ['groups' => 'procedure:read']
         );
     }
 
@@ -44,9 +44,7 @@ class ProcedureService
             throw new EntityNotFoundException('Процедура не найдена');
         }
 
-        $jsonData = $this->serializer->serialize($procedureDTO, 'json');
-
-        return $jsonData;
+        return $this->serializer->serialize($procedureDTO, 'json');
     }
 
     public function createProcedure(CreateProcedureDto $dto): Procedure
@@ -88,6 +86,5 @@ class ProcedureService
 
         $this->entityManager->remove($procedure);
         $this->entityManager->flush();
-
     }
 }

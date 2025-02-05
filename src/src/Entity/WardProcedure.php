@@ -25,12 +25,11 @@ class WardProcedure
 
     #[ORM\ManyToOne(targetEntity: Ward::class, inversedBy: 'wardProcedures')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['procedure:read'])]
     private Ward $ward;
 
     #[ORM\ManyToOne(targetEntity: Procedure::class, inversedBy: 'wardProcedures')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['ward_procedure:read', 'procedure:read'])]
+    #[Groups(['ward_procedure:read'])]
     private Procedure $procedure;
 
     #[ORM\Column(type: 'integer')]
