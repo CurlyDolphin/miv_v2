@@ -59,6 +59,17 @@ class WardController extends AbstractController
         return new JsonResponse($wardInfo, Response::HTTP_OK);
     }
 
+    #[Route('/wards/{wardId}/procedures', name: 'get_healing_plan', methods: ['GET'])]
+    public function getWardProcedure(
+        int $wardId,
+        WardService $wardService
+    ): JsonResponse
+    {
+        $jsonData = $wardService->getWardProcedures($wardId);
+
+        return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
+    }
+
     #[Route('/wards/{wardId}/procedures', name: 'create_healing_plan', methods: ['POST'])]
     public function updateWardProcedure(
         int $wardId,

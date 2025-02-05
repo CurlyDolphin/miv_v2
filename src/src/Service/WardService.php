@@ -7,6 +7,7 @@ use App\Dto\Ward\UpdateWardProcedureDto;
 use App\Entity\Procedure;
 use App\Entity\Ward;
 use App\Entity\WardProcedure;
+use App\Repository\WardProcedureRepository;
 use App\Repository\WardRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
@@ -16,10 +17,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class WardService
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly WardRepository         $wardRepository,
-        private readonly SerializerInterface    $serializer,
-        private readonly ValidatorInterface     $validator,
+        private readonly EntityManagerInterface  $entityManager,
+        private readonly WardRepository          $wardRepository,
+        private readonly WardProcedureRepository $wardProcedureRepository,
+        private readonly SerializerInterface     $serializer,
+        private readonly ValidatorInterface      $validator,
     ) {}
 
     public function getWards()
@@ -80,6 +82,21 @@ class WardService
             'wardNumber' => $ward->getWardNumber(),
             'patients'   => $patients,
         ];
+    }
+
+    public function getWardProcedures(int $wardId): string
+    {
+        $wardProcedures = $this->wardProcedureRepository->findByWardWithProcedureOrdered($wardId);
+
+        if (empty($wardProcedures)) {
+            throw new EntityNotFoundException('Лечебный план не найден для заданной палаты');
+        }
+
+        return $this->serializer->serialize(
+            $wardProcedures,
+            'json',
+            ['groups' => 'ward_procedure:read']
+        );
     }
 
     public function updateWardProcedures(int $wardId, UpdateWardProcedureDto $dto): void

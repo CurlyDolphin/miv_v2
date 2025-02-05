@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProcedureRepository::class)]
 class Procedure
@@ -17,12 +18,15 @@ class Procedure
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ward_procedure:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 120, unique: true)]
+    #[Groups(['ward_procedure:read'])]
     private string $name;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['ward_procedure:read'])]
     private string $description;
 
     #[ORM\OneToMany(targetEntity: WardProcedure::class, mappedBy:'procedure')]

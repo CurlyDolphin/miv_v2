@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: WardProcedureRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: false)]
@@ -28,9 +29,11 @@ class WardProcedure
 
     #[ORM\ManyToOne(targetEntity: Procedure::class, inversedBy: 'wardProcedures')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ward_procedure:read'])]
     private Procedure $procedure;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['ward_procedure:read'])]
     private int $sequence;
 
     public function getId(): ?int
