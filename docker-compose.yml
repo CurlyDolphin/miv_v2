@@ -6,10 +6,24 @@ services:
     volumes:
       - ./src:/var/www/html
       - composer_home:/var/www/.composer
-    ports:
-      - "9000:9000"
+    networks:
+      - postgres
     working_dir: /var/www/html
     depends_on:
+      - postgres
+
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_container
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./src:/var/www/html
+    ports:
+      - "80:80"
+    depends_on:
+      - php
+    networks:
       - postgres
 
   postgres:
@@ -79,7 +93,7 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     ports:
-      - "5050:80"
+      - "5050:60"
     restart: unless-stopped
     deploy:
       resources:

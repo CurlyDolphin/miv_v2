@@ -1,11 +1,10 @@
 FROM php:8.2-fpm
 
-# Установка необходимых зависимостей
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libpq-dev \
-    && docker-php-ext-install pdo_pgsql
+# Устанавливаем зависимости для работы с PostgreSQL
+RUN apt-get update && apt-get install -y libpq-dev
+
+# Устанавливаем расширения PDO и pdo_pgsql
+RUN docker-php-ext-install pdo pdo_pgsql
 
 # Установка Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
