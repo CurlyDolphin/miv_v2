@@ -2,10 +2,10 @@ services:
   php:
     build:
       context: ./docker/php
+      dockerfile: Dockerfile
     container_name: symfony_app
     volumes:
       - ./src:/var/www/html
-      - composer_home:/var/www/.composer
     networks:
       - postgres
     working_dir: /var/www/html
@@ -23,6 +23,7 @@ services:
       - "80:80"
     depends_on:
       - php
+      - postgres
     networks:
       - postgres
 
@@ -93,7 +94,7 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     ports:
-      - "5050:60"
+      - "5050:80"
     restart: unless-stopped
     deploy:
       resources:
@@ -124,10 +125,29 @@ services:
     networks:
       - postgres
 
+  composer:
+    container_name: composer
+    build:
+      context: ./docker/composer
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/var/www/html
+
+  console:
+    container_name: console
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - postgres
+    entrypoint: [ "php", "bin/console" ]
+
 volumes:
   hospital-data:
   pgadmin-data:
-  composer_home:
 
 networks:
   postgres:

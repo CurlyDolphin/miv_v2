@@ -6,9 +6,6 @@ RUN apt-get update && apt-get install -y libpq-dev
 # Устанавливаем расширения PDO и pdo_pgsql
 RUN docker-php-ext-install pdo pdo_pgsql
 
-# Установка Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
 # Настройка рабочего окружения
 WORKDIR /var/www/html
 
