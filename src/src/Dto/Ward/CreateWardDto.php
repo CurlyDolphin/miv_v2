@@ -6,11 +6,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateWardDto
 {
-    #[Assert\NotBlank]
-    #[Assert\Range(min: 1, max: 999)]
-    public int $wardNumber;
+    public function __construct(
+        #[Assert\NotBlank]
+        #[Assert\Range(min: 1, max: 999)]
+        public int $wardNumber,
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 5)]
-    public string $description;
+        #[Assert\NotBlank]
+        #[Assert\Length(min: 5)]
+        public string $description,
+    )
+    {
+
+    }
 }

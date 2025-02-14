@@ -29,16 +29,4 @@ class WardRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function deleteWardWithPatients(int $wardId): void
-    {
-        $ward = $this->find($wardId);
-
-        if (!$ward) {
-            throw new \Exception("Палата с идентификатором {$wardId} не найдена.");
-        }
-
-        foreach ($ward->getHospitalizations() as $hospitalization) {
-            $hospitalization->setDeletedAt(new \DateTime('now'));
-        }
-    }
 }

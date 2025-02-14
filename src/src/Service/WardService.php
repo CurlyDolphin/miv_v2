@@ -80,8 +80,24 @@ class WardService
 
     public function deleteWard(int $wardId): void
     {
-        $this->wardRepository->deleteWardWithPatients($wardId);
+        $ward = $this->wardRepository->find($wardId);
 
+        if (!$ward) {
+            throw new \Exception("Палата с идентификатором {$wardId} не найдена.");
+        }
+
+
+        foreach ($ward->getHospitalizations() as $hospitalization) {
+            $hospitalization->setDeletedAt(new \DateTime('now'));
+        }
+
+        foreach ($ward->getWardProcedures() as $wardProcedure) {
+            $wardProcedure->setDeletedAt(new \DateTime('now'));
+        }
+
+        $ward->setDeletedAt(new \DateTime('now'));
+
+        $this->entityManager->persist($ward);
         $this->entityManager->flush();
     }
 }
