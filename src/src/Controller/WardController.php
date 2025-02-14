@@ -11,10 +11,24 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use OpenApi\Attributes as OA;
 
 class WardController extends AbstractController
 {
     #[Route('/wards', name: 'get_wards', methods: ['GET'])]
+    #[OA\Response(
+        response: 200,
+        description: 'List of wards',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'wardNumber', type: 'integer', example: 63),
+                    new OA\Property(property: 'description', type: 'string', example: 'Инфекционная палата'),
+                ]
+            )
+        )
+    )]
     public function getWards(WardService $wardService): JsonResponse
     {
         return new JsonResponse($wardService->getWards(), Response::HTTP_OK, [], true);

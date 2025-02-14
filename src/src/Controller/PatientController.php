@@ -14,10 +14,35 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use OpenApi\Attributes as OA;
 
 class PatientController extends AbstractController
 {
     #[Route('/patients', name: 'get_patients', methods: ['GET'])]
+    #[OA\Response(
+        response: 200,
+        description: 'List of patients',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 2),
+                    new OA\Property(property: 'name', type: 'string', example: 'Кирилл'),
+                    new OA\Property(property: 'lastName', type: 'string', example: 'Иванов'),
+                    new OA\Property(property: 'gender', type: 'string', example: 'male'),
+                    new OA\Property(property: 'isIdentified', type: 'boolean', example: true),
+                    new OA\Property(property: 'birthday', type: 'string', format: 'date-time', example: '2005-01-01T00:00:00+00:00'),
+                    new OA\Property(property: 'cardNumber', type: 'integer', example: 1),
+                    new OA\Property(
+                        property: 'hospitalizations',
+                        type: 'array',
+                        items: new OA\Items(type: 'object'),
+                        example: []
+                    ),
+                ]
+            )
+        )
+    )]
     public function getAllPatients(
         PatientService $patientService
     ): JsonResponse

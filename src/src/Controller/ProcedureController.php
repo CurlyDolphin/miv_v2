@@ -11,9 +11,36 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use OpenApi\Attributes as OA;
 
 class ProcedureController extends AbstractController
 {
+    #[OA\Response(
+        response: 200,
+        description: 'List of procedures',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(property: 'name', type: 'string', example: 'Электрокардиография'),
+                    new OA\Property(property: 'description', type: 'string', example: 'Диагностическая процедура, позволяет обнаружить многие болезни сердечно-сосудистой системы'),
+                ]
+            ),
+            example: [
+                [
+                    'id' => 1,
+                    'name' => 'Электрокардиография',
+                    'description' => 'Диагностическая процедура, позволяет обнаружить многие болезни сердечно-сосудистой системы'
+                ],
+                [
+                    'id' => 2,
+                    'name' => 'Измерение АД',
+                    'description' => 'Измерение артериального давления'
+                ]
+            ]
+        )
+    )]
     #[Route('/procedures', name: 'get_procedures', methods: ['GET'])]
     public function getProcedures(ProcedureService $procedureService): JsonResponse
     {
