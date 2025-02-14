@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250203131538 extends AbstractMigration
+final class Version20250214110903 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -28,7 +28,7 @@ final class Version20250203131538 extends AbstractMigration
         $this->addSql('CREATE TABLE hospitalization (id INT NOT NULL, patient_id INT NOT NULL, ward_id INT NOT NULL, discharge_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_40CF08916B899279 ON hospitalization (patient_id)');
         $this->addSql('CREATE INDEX IDX_40CF0891D95D22FD ON hospitalization (ward_id)');
-        $this->addSql('CREATE TABLE patient (id INT NOT NULL, name VARCHAR(80) NOT NULL, last_name VARCHAR(80) NOT NULL, gender VARCHAR(6) NOT NULL, is_identified BOOLEAN NOT NULL, card_number INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE patient (id INT NOT NULL, name VARCHAR(80) NOT NULL, last_name VARCHAR(80) NOT NULL, gender VARCHAR(6) NOT NULL, is_identified BOOLEAN NOT NULL, birthday DATE DEFAULT NULL, card_number INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_1ADAD7EBE4AF4C20 ON patient (card_number)');
         $this->addSql('CREATE TABLE procedure (id INT NOT NULL, name VARCHAR(120) NOT NULL, description TEXT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_9C3CBC1F5E237E06 ON procedure (name)');

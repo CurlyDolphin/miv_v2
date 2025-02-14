@@ -22,7 +22,7 @@ class Patient
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column]
     #[Groups(['patient:read'])]
     private int $id;
 
@@ -43,6 +43,10 @@ class Patient
     #[ORM\Column(type: "boolean")]
     #[Groups(['patient:read'])]
     private bool $isIdentified = false;
+
+    #[ORM\Column(type: "date", nullable: true)]
+    #[Groups(['patient:read'])]
+    private ?\DateTimeInterface $birthday = null;
 
     #[ORM\Column(type: "integer", unique: true)]
     #[ORM\GeneratedValue(strategy: "SEQUENCE")]
@@ -112,6 +116,17 @@ class Patient
         return $this;
     }
 
+    public function getBirthday(): ?\DateTimeInterface
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday(?\DateTimeInterface $birthday): self
+    {
+        $this->birthday = $birthday;
+        return $this;
+    }
+
     public function getCardNumber(): int
     {
         return $this->cardNumber;
@@ -134,16 +149,6 @@ class Patient
         if (!$this->hospitalizations->contains($hospitalization)) {
             $this->hospitalizations[] = $hospitalization;
             $hospitalization->setPatient($this);
-        }
-        return $this;
-    }
-
-    public function removeHospitalization(Hospitalization $hospitalization): self
-    {
-        if ($this->hospitalizations->removeElement($hospitalization)) {
-            if ($hospitalization->getPatient() === $this) {
-                $hospitalization->setPatient(null);
-            }
         }
         return $this;
     }

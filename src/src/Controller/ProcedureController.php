@@ -23,7 +23,7 @@ class ProcedureController extends AbstractController
     #[Route('/procedures', name: 'create_procedure', methods: ['POST'])]
     public function createProcedure(
         #[MapRequestPayload] CreateProcedureDto $dto,
-        ProcedureService $procedureService,
+        ProcedureService                        $procedureService,
     ): JsonResponse {
         $procedure = $procedureService->createProcedure($dto);
 
@@ -35,7 +35,7 @@ class ProcedureController extends AbstractController
 
     #[Route('/procedures/{procedureId}', name: 'get_procedure_info', methods: ['GET'])]
     public function getProcedureInfo(
-        int $procedureId,
+        int              $procedureId,
         ProcedureService $procedureService
     ): JsonResponse {
         $procedureInfo = $procedureService->getProcedureInfo($procedureId);
@@ -47,7 +47,7 @@ class ProcedureController extends AbstractController
     public function updateProcedure(
         int $id,
         #[MapRequestPayload] CreateProcedureDto $dto,
-        ProcedureService $procedureService,
+        ProcedureService                        $procedureService,
     ): JsonResponse {
         $procedure = $procedureService->updateProcedure($id, $dto);
 
@@ -59,7 +59,7 @@ class ProcedureController extends AbstractController
 
     #[Route('/procedures/{id}', name: 'delete_procedure', requirements: ['id' => '\d+'], methods: ['DELETE'])]
     public function deleteProcedure(
-        int $id,
+        int              $id,
         ProcedureService $procedureService
     ): JsonResponse
     {

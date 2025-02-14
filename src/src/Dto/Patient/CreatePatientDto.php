@@ -2,9 +2,10 @@
 
 namespace App\Dto\Patient;
 
-use App\Enum\GenderEnum;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\IdentifiedBirthday;
 
+#[IdentifiedBirthday]
 class CreatePatientDto
 {
     #[Assert\Length(
@@ -23,11 +24,19 @@ class CreatePatientDto
     )]
     public string $lastName;
 
+    #[Assert\NotBlank(message: "Дата рождения должна быть задана")]
+    #[Assert\Type("\DateTimeInterface")]
+    #[Assert\LessThanOrEqual(
+        value: new \DateTimeImmutable('today'),
+        message: "Дата рождения не может быть позже текущей даты"
+    )]
+    public ?\DateTimeInterface $birthday = null;
+
     #[Assert\Choice(['male', 'female', 'other'], message: "Пол должен быть задан")]
-    public GenderEnum $gender;
+    public string $gender;
 
     #[Assert\NotNull]
-    public bool $isIdentified = false;
+    public bool $isIdentified = true;
 
     #[Assert\Type(type: "integer")]
     public ?int $cardNumber = null;

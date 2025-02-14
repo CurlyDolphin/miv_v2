@@ -35,7 +35,7 @@ class WardProcedureController extends AbstractController
         $wardProcedures = $wardProcedureService->updateWardProcedures($wardId, $dto);
 
         return new JsonResponse(
-            ['message' => 'Ward procedures updated successfully', 'Procedures' => $wardProcedures],
+            ['message' => 'Ward procedures updated successfully'],
             Response::HTTP_OK
         );
     }

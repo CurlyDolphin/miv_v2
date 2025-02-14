@@ -49,8 +49,10 @@ class PatientService
             throw new \InvalidArgumentException((string) $errors);
         }
 
+        $gender = GenderEnum::from($dto->gender);
+
         if (!$dto->isIdentified) {
-            $dto->name = match ($dto->gender) {
+            $dto->name = match ($gender) {
                 GenderEnum::MALE => 'John',
                 GenderEnum::FEMALE => 'Jane',
                 GenderEnum::OTHER => 'Alex',
@@ -58,23 +60,29 @@ class PatientService
             $dto->lastName = 'Doe';
         }
 
-        if (!isset($dto->cardNumber)) {
-            $cardNumber = $this->generateNextCardNumber();
-        } else {
-            $cardNumber = $dto->cardNumber;
+        $cardNumber = $dto->cardNumber ?? $this->generateNextCardNumber();
+        if (isset($dto->cardNumber)) {
             $this->updateCardNumberSequence($cardNumber);
         }
 
         $patient = new Patient();
         $patient->setName($dto->name);
         $patient->setLastName($dto->lastName);
-        $patient->setGender($dto->gender);
+        $patient->setGender($gender);
         $patient->setIdentified($dto->isIdentified);
         $patient->setCardNumber($cardNumber);
 
+        if ($dto->birthday) {
+            $birthday = \DateTimeImmutable::createFromFormat('Y-m-d', $dto->birthday);
+            if (!$birthday) {
+                throw new \InvalidArgumentException('Неверный формат даты рождения. Ожидается Y-m-d.');
+            }
+            $patient->setBirthday($birthday);
+        }
+    
         $this->entityManager->persist($patient);
         $this->entityManager->flush();
-
+    
         return $patient;
     }
 

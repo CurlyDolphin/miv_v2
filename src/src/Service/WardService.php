@@ -62,6 +62,7 @@ class WardService
         }
 
         $patients = [];
+
         foreach ($ward->getHospitalizations() as $hospitalization) {
             $patient = $hospitalization->getPatient();
             $patients[] = [

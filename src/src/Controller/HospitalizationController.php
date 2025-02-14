@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\Hospitalization\AssignPatientDto;
-use App\Dto\Patient\UpdatePatientDto;
 use App\Service\HospitalizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,20 +23,5 @@ class HospitalizationController extends AbstractController
         $hospitalizationService->assignPatientToWard($dto);
 
         return new JsonResponse(['message' => 'Patient assigned to ward successfully'], Response::HTTP_OK);
-    }
-
-    #[Route('/patients/{id}', name: 'update_patient', methods: ['PUT'])]
-    public function updateWard(
-        int $id,
-        #[MapRequestPayload] UpdatePatientDto $dto,
-        HospitalizationService                $hospitalizationService
-    ): JsonResponse
-    {
-        $patient = $hospitalizationService->updatePatient($id, $dto);
-
-        return new JsonResponse(
-            ['message' => 'Patient updated successfully', 'Patient Name' => $patient->getName()],
-            Response::HTTP_OK
-        );
     }
 }

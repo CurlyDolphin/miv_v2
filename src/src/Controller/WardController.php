@@ -23,7 +23,7 @@ class WardController extends AbstractController
     #[Route('/wards', name: 'create_wards', methods: ['POST'])]
     public function createWards(
         #[MapRequestPayload] CreateWardDto $dto,
-        WardService $wardService,
+        WardService                        $wardService,
     ): JsonResponse
     {
         $ward = $wardService->createWard($dto);
@@ -51,7 +51,7 @@ class WardController extends AbstractController
 
     #[Route('/wards/{id}', name: 'get_ward_info', methods: ['GET'])]
     public function getWardInfo(
-        int $id,
+        int         $id,
         WardService $wardService
     ): JsonResponse
     {
@@ -61,7 +61,10 @@ class WardController extends AbstractController
     }
 
     #[Route('/wards/{wardId}', name: 'delete_ward', methods: ['DELETE'])]
-    public function deleteWard(int $wardId, WardService $wardService): JsonResponse
+    public function deleteWard(
+        int         $wardId,
+        WardService $wardService
+    ): JsonResponse
     {
         $wardService->deleteWard($wardId);
 
