@@ -29,7 +29,7 @@ class ProcedureRepository extends ServiceEntityRepository
             ->leftJoin('h.patient', 'pat')
             ->addSelect('pat')
             ->where('p.id = :id')
-            ->andWhere('h.dischargeDate IS NULL') // Добавляем условие для текущих пациентов
+            ->andWhere('h.dischargeDate IS NULL')
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();

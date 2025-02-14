@@ -6,11 +6,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateProcedureDto
 {
-    #[Assert\NotBlank]
-    #[Assert\Type('string', message: "Имя должно быть строкой")]
-    public string $name;
+    public function __construct(
+        #[Assert\NotBlank]
+        #[Assert\Type('string', message: "Имя должно быть строкой")]
+        public string $name,
 
-    #[Assert\NotBlank]
-    #[Assert\Type('string', message: "Описание должно быть строкой")]
-    public string $description;
+        #[Assert\NotBlank]
+        #[Assert\Type('string', message: "Описание должно быть строкой")]
+        public string $description,
+    )
+    {
+    }
 }
