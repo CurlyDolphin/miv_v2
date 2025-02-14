@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\IdentifiedBirthday;
 
 #[IdentifiedBirthday]
-class CreatePatientDto
+class IdentifyPatientDto
 {
     #[Assert\Length(
         min: 1,
@@ -24,6 +24,7 @@ class CreatePatientDto
     )]
     public string $lastName;
 
+    #[Assert\NotBlank(message: "Дата рождения должна быть задана")]
     #[Assert\Type("\DateTimeInterface")]
     #[Assert\LessThanOrEqual(
         value: new \DateTimeImmutable('today'),
@@ -31,12 +32,4 @@ class CreatePatientDto
     )]
     public ?\DateTimeInterface $birthday = null;
 
-    #[Assert\Choice(['male', 'female', 'other'], message: "Пол должен быть задан")]
-    public string $gender;
-
-    #[Assert\NotNull]
-    public bool $isIdentified = true;
-
-    #[Assert\Type(type: "integer")]
-    public ?int $cardNumber = null;
 }

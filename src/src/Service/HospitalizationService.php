@@ -61,30 +61,24 @@ class HospitalizationService
             throw new EntityNotFoundException('Patient not found');
         }
 
-        if ($dto->name !== null) {
-            $patient->setName($dto->name);
+        $patient->setName($dto->name);
+        $patient->setLastName($dto->lastName);
+
+        $ward = $this->wardRepository->find($dto->wardId);
+        if (!$ward) {
+            throw new EntityNotFoundException('Ward not found');
         }
-        if ($dto->lastName !== null) {
-            $patient->setLastName($dto->lastName);
-        }
 
-        if ($dto->wardId !== null) {
-            $ward = $this->wardRepository->find($dto->wardId);
-            if (!$ward) {
-                throw new EntityNotFoundException('Ward not found');
-            }
+        $currentHospitalization = $patient->getHospitalizations()->last();
 
-            $currentHospitalization = $patient->getHospitalizations()->last();
+        if ($currentHospitalization) {
+            $currentHospitalization->setWard($ward);
+        } else {
+            $hospitalization = new Hospitalization();
+            $hospitalization->setPatient($patient);
+            $hospitalization->setWard($ward);
 
-            if ($currentHospitalization) {
-                $currentHospitalization->setWard($ward);
-            } else {
-                $hospitalization = new Hospitalization();
-                $hospitalization->setPatient($patient);
-                $hospitalization->setWard($ward);
-
-                $this->entityManager->persist($hospitalization);
-            }
+            $this->entityManager->persist($hospitalization);
         }
 
         $this->entityManager->flush();

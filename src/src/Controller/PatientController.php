@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\Patient\CreatePatientDto;
+use App\Dto\Patient\IdentifyPatientDto;
 use App\Dto\Patient\UpdatePatientDto;
 use App\Service\HospitalizationService;
 use App\Service\PatientService;
@@ -60,6 +61,21 @@ class PatientController extends AbstractController
 
         return new JsonResponse(
             ['message' => 'Patient updated successfully', 'Patient Name' => $patient->getName()],
+            Response::HTTP_OK
+        );
+    }
+
+    #[Route('/patients/identify/{id}', name: 'identify_patient', methods: ['PATCH'])]
+    public function identifyPatient(
+        int                                   $id,
+        #[MapRequestPayload] IdentifyPatientDto $dto,
+        PatientService $patientService
+    ): JsonResponse
+    {
+        $patient = $patientService->identifyPatient($id, $dto);
+
+        return new JsonResponse(
+            ['message' => 'Patient identified successfully', 'patientName' => $patient->getName()],
             Response::HTTP_OK
         );
     }

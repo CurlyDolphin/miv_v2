@@ -21,8 +21,6 @@ class UpdatePatientDto
     )]
     public ?string $lastName = null;
 
-    public bool $isIdentified = true;
-
     #[Assert\Type(type: "integer")]
     public ?int $wardId = null;
 }

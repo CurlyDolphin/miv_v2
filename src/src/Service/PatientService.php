@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Dto\Patient\CreatePatientDto;
+use App\Dto\Patient\IdentifyPatientDto;
 use App\Entity\Patient;
 use App\Enum\GenderEnum;
 use App\Repository\PatientRepository;
@@ -73,11 +74,7 @@ class PatientService
         $patient->setCardNumber($cardNumber);
 
         if ($dto->birthday) {
-            $birthday = \DateTimeImmutable::createFromFormat('Y-m-d', $dto->birthday);
-            if (!$birthday) {
-                throw new \InvalidArgumentException('Неверный формат даты рождения. Ожидается Y-m-d.');
-            }
-            $patient->setBirthday($birthday);
+            $patient->setBirthday($dto->birthday);
         }
     
         $this->entityManager->persist($patient);
@@ -97,6 +94,34 @@ class PatientService
             "SELECT setval('card_number_seq', GREATEST((SELECT MAX(card_number) FROM patient), :manualNumber) + 1, false)",
             ['manualNumber' => $manualNumber]
         );
+    }
+
+    public function identifyPatient(int $id, IdentifyPatientDto $dto): Patient
+    {
+        $errors = $this->validator->validate($dto);
+
+        if (count($errors) > 0) {
+            throw new \InvalidArgumentException((string) $errors);
+        }
+
+        $patient = $this->patientRepository->find($id);
+
+        if (!$patient) {
+            throw new EntityNotFoundException("Patient with id $id not found");
+        }
+
+        if ($dto->birthday) {
+            $patient->setBirthday($dto->birthday);
+        }
+
+        $patient->setName($dto->name);
+        $patient->setLastName($dto->lastName);
+        $patient->setIdentified(true);
+
+        $this->entityManager->persist($patient);
+        $this->entityManager->flush();
+
+        return $patient;
     }
 
     public function deletePatient(int $id): void
