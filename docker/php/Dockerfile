@@ -6,12 +6,18 @@ RUN apt-get update && apt-get install -y libpq-dev
 # Устанавливаем расширения PDO и pdo_pgsql
 RUN docker-php-ext-install pdo pdo_pgsql
 
+# Устанавливаем Xdebug
+ARG INSTALL_XDEBUG=false
+
+RUN if [ ${INSTALL_XDEBUG} = true ]; then \
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug \
+;fi
+
+COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
 # Настройка рабочего окружения
 WORKDIR /var/www/html
-
-# Установка Symfony CLI
-RUN curl -sS https://get.symfony.com/cli/installer | bash \
-    && mv /root/.symfony*/bin/symfony /usr/local/bin/symfony
 
 # Копируем пользовательские настройки PHP
 COPY php.ini /usr/local/etc/php/

@@ -51,6 +51,23 @@ class PatientController extends AbstractController
     }
 
     #[Route('/patients/{patientId}', name: 'get_patient', methods: ['GET'])]
+    #[OA\Response(
+        response: 200,
+        description: 'get patient by id',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 2),
+                    new OA\Property(
+                        property: 'name',
+                        type: 'string',
+                        example: 'John Doe'
+                    ),
+                ]
+            )
+        )
+    )]
     public function getPatientInfo(
         int            $patientId,
         PatientService $patientService
@@ -62,6 +79,23 @@ class PatientController extends AbstractController
     }
 
     #[Route('/patients', name: 'create_patient', methods: ['POST'])]
+    #[OA\Response(
+        response: 201,
+        description: 'create patient',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(
+                        property: 'name',
+                        type: 'string',
+                        example: 'Кирилл Иванов'
+                    ),
+                ]
+            )
+        )
+    )]
     public function createPatient(
         #[MapRequestPayload] CreatePatientDto $dto,
         PatientService $patientService,
@@ -76,7 +110,24 @@ class PatientController extends AbstractController
     }
 
     #[Route('/patients/{id}', name: 'update_patient', methods: ['PUT'])]
-    public function updateWard(
+    #[OA\Response(
+        response: 200,
+        description: 'update patient',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(
+                        property: 'name',
+                        type: 'string',
+                        example: 'John Doe'
+                    ),
+                ]
+            )
+        )
+    )]
+    public function updatePatient(
         int $id,
         #[MapRequestPayload] UpdatePatientDto $dto,
         HospitalizationService                $hospitalizationService
@@ -90,9 +141,22 @@ class PatientController extends AbstractController
         );
     }
 
-    #[Route('/patients/identify/{id}', name: 'identify_patient', methods: ['PATCH'])]
+    #[Route('/patients/identify/{id}', name: 'identify_patient', methods: ['PUT'])]
+    #[OA\Response(
+        response: 200,
+        description: 'Identify patient by id',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'message', type: 'string', example: 'Patient identified successfully'),
+                    new OA\Property(property: 'patientName', type: 'string', example: 'Кирилл Иванов'),
+                ]
+            )
+        )
+    )]
     public function identifyPatient(
-        int                                   $id,
+        int                                     $id,
         #[MapRequestPayload] IdentifyPatientDto $dto,
         PatientService $patientService
     ): JsonResponse
@@ -106,6 +170,11 @@ class PatientController extends AbstractController
     }
 
     #[Route('/patients/{id}', name: 'delete_patient', methods: ['DELETE'])]
+    #[OA\Response(
+        response: 200,
+        description: 'delete patient',
+        content: new OA\JsonContent()
+    )]
     public function deletePatient(
         int            $id,
         PatientService $patientService

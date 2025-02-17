@@ -3,6 +3,8 @@ services:
     build:
       context: ./docker/php
       dockerfile: Dockerfile
+      args:
+        - INSTALL_XDEBUG=${INSTALL_XDEBUG}
     container_name: symfony_app
     volumes:
       - ./src:/var/www/html
@@ -11,7 +13,6 @@ services:
     working_dir: /var/www/html
     depends_on:
       - postgres
-
 
   nginx:
     image: nginx:latest
