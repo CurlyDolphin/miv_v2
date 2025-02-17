@@ -2,8 +2,9 @@
 
 namespace App\Dto\Patient;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\IdentifiedBirthday;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[IdentifiedBirthday]
 class CreatePatientDto
@@ -25,18 +26,18 @@ class CreatePatientDto
         )]
         public string $lastName,
 
+        #[Assert\Choice(['male', 'female', 'other'], message: "Пол должен быть задан")]
+        public string $gender,
+
+        #[Assert\NotNull]
+        public bool $isIdentified = true,
+
         #[Assert\Type("\DateTimeInterface")]
         #[Assert\LessThanOrEqual(
             value: new \DateTimeImmutable('today'),
             message: "Дата рождения не может быть позже текущей даты"
         )]
         public ?\DateTimeInterface $birthday = null,
-
-        #[Assert\Choice(['male', 'female', 'other'], message: "Пол должен быть задан")]
-        public string $gender,
-
-        #[Assert\NotNull]
-        public bool $isIdentified = true,
 
         #[Assert\Type(type: "integer")]
         public ?int $cardNumber = null

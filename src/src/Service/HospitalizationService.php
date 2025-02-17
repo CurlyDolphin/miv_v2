@@ -3,14 +3,13 @@
 namespace App\Service;
 
 use App\Dto\Hospitalization\AssignPatientDto;
-use App\Dto\Patient\UpdatePatientDto;
+use App\Dto\Hospitalization\UpdatePatientDto;
 use App\Entity\Hospitalization;
 use App\Entity\Patient;
 use App\Repository\PatientRepository;
 use App\Repository\WardRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class HospitalizationService
@@ -22,7 +21,7 @@ class HospitalizationService
         private readonly ValidatorInterface     $validator,
     ) {}
 
-    public function assignPatientToWard(AssignPatientDto $dto): Hospitalization
+    public function assignPatientToWard(AssignPatientDto $dto): Patient
     {
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
@@ -49,13 +48,14 @@ class HospitalizationService
         $this->entityManager->persist($hospitalization);
         $this->entityManager->flush();
 
-        return $hospitalization;
+        return $patient;
     }
 
     public function updatePatient(
         int $id,
         UpdatePatientDto $dto,
     ): Patient {
+
         $patient = $this->patientRepository->find($id);
         if (!$patient) {
             throw new EntityNotFoundException('Patient not found');
@@ -82,6 +82,7 @@ class HospitalizationService
         }
 
         $this->entityManager->flush();
+
         return $patient;
     }
 }

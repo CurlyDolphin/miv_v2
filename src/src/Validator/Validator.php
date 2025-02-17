@@ -6,9 +6,9 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use App\Dto\Patient\CreatePatientDto;
 
-class IdentifiedBirthdayValidator extends ConstraintValidator
+class Validator extends ConstraintValidator
 {
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof IdentifiedBirthday) {
             throw new \InvalidArgumentException('Неверный тип ограничения');
