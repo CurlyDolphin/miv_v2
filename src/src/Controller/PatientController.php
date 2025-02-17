@@ -60,7 +60,7 @@ class PatientController extends AbstractController
                     new OA\Property(
                         property: 'name',
                         type: 'string',
-                        example: 'John Doe'
+                        example: 'Кирилл'
                     ),
                 ]
             )
@@ -84,11 +84,11 @@ class PatientController extends AbstractController
             type: 'array',
             items: new OA\Items(
                 properties: [
-                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(property: 'id', type: 'integer', example: 2),
                     new OA\Property(
                         property: 'name',
                         type: 'string',
-                        example: 'Кирилл Иванов'
+                        example: 'Кирилл'
                     ),
                 ]
             )
@@ -116,14 +116,14 @@ class PatientController extends AbstractController
             items: new OA\Items(
                 properties: [
                     new OA\Property(property: 'message', type: 'string', example: 'Patient identified successfully'),
-                    new OA\Property(property: 'patientName', type: 'string', example: 'Кирилл Иванов'),
+                    new OA\Property(property: 'patientName', type: 'string', example: 'Андрей'),
                 ]
             )
         )
     )]
     public function identifyPatient(
-        int                                     $id,
         #[MapRequestPayload] IdentifyPatientDto $dto,
+        int                                     $id,
         PatientService $patientService
     ): JsonResponse
     {

@@ -20,6 +20,8 @@ services:
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./src:/var/www/html
+      - /var/www/app/vendor
+      - /var/www/app/var
     ports:
       - "80:80"
     depends_on:

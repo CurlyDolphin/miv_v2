@@ -47,6 +47,13 @@ class ProcedureController extends AbstractController
         return new JsonResponse($procedureService->getProcedures(), Response::HTTP_OK, [], true);
     }
 
+    #[OA\Response(
+        response: 201,
+        description: 'Procedure created successfully',
+        content: new OA\JsonContent(
+            example: ['message' => 'Procedure created successfully', 'procedureName' => 'Электрокардиография']
+        )
+    )]
     #[Route('/procedures', name: 'create_procedure', methods: ['POST'])]
     public function createProcedure(
         #[MapRequestPayload] CreateProcedureDto $dto,

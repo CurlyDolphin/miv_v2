@@ -48,11 +48,11 @@ class HospitalizationController extends AbstractController
             type: 'array',
             items: new OA\Items(
                 properties: [
-                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(property: 'id', type: 'integer', example: 8),
                     new OA\Property(
                         property: 'name',
                         type: 'string',
-                        example: 'John Doe'
+                        example: 'Лариса'
                     ),
                 ]
             )

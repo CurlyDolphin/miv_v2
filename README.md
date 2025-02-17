@@ -27,4 +27,8 @@ Open in browser [http://localhost:5050](http://localhost:5050)
    <твой-путь-на-хосте>/project__name/src -> /var/www/html
    ```
 
+## Взаимодействие с Compose
+docker-compose run --rm composer install
 
+## Взаимодействие с bin\console
+docker compose run --rm console cache:clear
